@@ -124,6 +124,8 @@ const sortTransactions = function (curCard) {
 //Reveal card transactions block
 const revealTransactions = function (transactions, curTarget) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
+  const transastions = `<div class="transactions"></div>`;
+  cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
   transactions.forEach((t) => {
     const htmlString = `<div class="transaction ${t.type}">
             <span class="transaction-group">
@@ -146,8 +148,6 @@ const revealTransactions = function (transactions, curTarget) {
 const openTransactions = document.addEventListener("click", function (e) {
   const curTarget = e.target;
   const curCard = curTarget.closest(".user-card");
-  e.stopPropagation();
-
   if (curTarget.classList.contains("transactions-init")) {
     //Toggle open class to define that transactions info is open
     curCard.classList.toggle("open");
@@ -162,7 +162,9 @@ const openTransactions = document.addEventListener("click", function (e) {
     } else {
       closeTransactions.textContent = "Show transactions↓";
       const transactionsBlock = curTarget.closest(".total-card__info");
-      transactionsBlock.removeChild(".transactions");
+      const transactions = curTarget.closest(".transactions");
+
+      transactionsBlock.removeChild(transactions);
     }
   }
 });

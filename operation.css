@@ -1,5 +1,5 @@
 .transactions {
-  display: flex;
+  display: hidden;
   flex-direction: column;
   width: 40%;
   align-items: flex-start;

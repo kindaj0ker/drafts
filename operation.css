@@ -1,0 +1,102 @@
+.transactions {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  align-items: flex-start;
+}
+.transaction {
+  margin: 0.2rem auto;
+  padding: 0.3rem;
+  font-family: var(--element-font);
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  border-radius: 10px;
+  background-color: white;
+  justify-content: space-between;
+  align-items: center;
+  align-self: flex-start;
+}
+.transaction-group {
+  background-color: grey;
+  border-radius: 3px;
+  width: 3rem;
+  margin: 0.3rem;
+}
+
+.oper-group__img {
+  padding: 0.2rem;
+  margin: 0;
+  width: 2.5rem;
+  align-self: center;
+}
+.transaction-name--date__block {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.transaction--date {
+  color: grey;
+}
+
+.withdrawal {
+  color: red;
+  border: 0.3rem solid red;
+}
+.deposit {
+  border: 0.3rem solid green;
+  color: green;
+}
+.transaction-amount {
+  display: flex;
+  flex-flow: right;
+}
+/* CARDS ZONE */
+.user-cards__zone {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 80rem;
+  background-color: azure;
+}
+.total-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.user-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.card-info__block {
+  margin: 0 0.2rem;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--element-font);
+}
+.card-wrapper {
+  display: flex;
+}
+.card-number {
+  margin: 0;
+}
+.card-plan {
+  margin: 0;
+}
+.expiry-date {
+  margin: 0;
+}
+.transactions-init {
+  margin: 0.5rem 0;
+  color: var(--blue-color);
+  text-decoration: underline;
+  font-size: 1.1rem;
+}
+.transactions-init:hover {
+  color: var(--grey-color);
+  cursor: pointer;
+}
+.user-card__img {
+  width: 8rem;
+  align-self: flex-start;
+}

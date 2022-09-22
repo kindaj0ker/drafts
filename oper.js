@@ -24,11 +24,12 @@ class User {
       //   },
     ];
   }
-  createNewCard(cardPlan, ID, expired = "") {
+  createNewCard(cardPlan, ID, expired = "", currency="$") {
     const data = new Map([
       ["id", `${ID}`], // CHANGE BACK ON LIBRARY UNIQID
       ["plan", `${cardPlan}`],
       ["date", `${new Date().toISOString().split("T")[0]}`],
+      ["currency", `${currency}`],
       ["expired", ``],
     ]);
     const card = Object.fromEntries(data);
@@ -54,9 +55,9 @@ const userPeter = new User(
   "peterJ@gmail.com",
   "IamPeter00!"
 );
-userPeter.createNewCard("VIP", "1");
-userPeter.createNewCard("PLUS", "2");
-userPeter.createNewCard("VIP", "3");
+userPeter.createNewCard("VIP", "1", , "$");
+userPeter.createNewCard("PLUS", "2", , "$");
+userPeter.createNewCard("VIP", "3", , "$");
 userPeter.createNewTransaction("loan", "500", "$", "deposit", "3");
 userPeter.createNewTransaction("other", "100", "$", "withdrawal", "3");
 userPeter.createNewTransaction("other", "50", "$", "withdrawal", "3");
@@ -97,27 +98,23 @@ userPeter.createNewTransaction("savings", "15", "$", "withdrawal", "2");
 const curUser = userPeter; // get curuser from local storage via email
 
 //Show Balance
-const balance = document.querySelectorAll(".balance-info__block");
-const balanceCard = balance.forEach((b) => {
-  console.log(b.closest(".user-card").id);
-});
 
 const showBalance = function (transactions) {
   return transactions.reduce((total, cur) => {
     if (cur.type === "withdrawal") {
       return (total -= Number(cur.amount));
-    }
-
-    return (total += Number(cur.amount));
+    } else return (total += Number(cur.amount));
   }, 0);
 };
 
 //Reveal cards
 const cardsZone = document.querySelector(".user-cards__zone");
 const revealCards = function (curUser) {
+  //Show balance of every card
   curUser.cards.forEach((card) => {
     const curId = card.id;
-    const curCardTrans = card.transactions.filter((t) => t.cardID === curId);
+    const curCardTrans = curUser.transactions.filter((t) => t.cardID === curId);
+    const balance = showBalance(curCardTrans);
     const cardHtml = `
     <div class="total-card__info">
       <div class="user-card" id=${card.id}>
@@ -132,7 +129,7 @@ const revealCards = function (curUser) {
         </div>
         <div class="balance-info__block">
           <h3>Balance</h3>
-          <p class="balance">${showBalance(curCardTrans)}</p>
+          <p class="balance">${balance + " " + card.currency}</p>
         </div>
       </div>
     </div>`;

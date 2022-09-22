@@ -1,7 +1,7 @@
 .transactions {
   display: hidden;
   flex-direction: column;
-  width: 40%;
+  width: 90%;
   align-items: flex-start;
 }
 .transaction {

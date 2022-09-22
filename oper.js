@@ -56,6 +56,11 @@ const userPeter = new User(
 );
 userPeter.createNewCard("VIP", "1");
 userPeter.createNewCard("PLUS", "2");
+userPeter.createNewCard("VIP", "3");
+userPeter.createNewTransaction("loan", "500", "$", "deposit", "3");
+userPeter.createNewTransaction("other", "100", "$", "withdrawal", "3");
+userPeter.createNewTransaction("other", "50", "$", "withdrawal", "3");
+
 userPeter.createNewTransaction("other", "130", "$", "deposit", "1");
 userPeter.createNewTransaction("loan", "500", "$", "deposit", "1");
 userPeter.createNewTransaction("other", "100", "$", "withdrawal", "1");
@@ -91,10 +96,28 @@ userPeter.createNewTransaction("savings", "15", "$", "withdrawal", "2");
 
 const curUser = userPeter; // get curuser from local storage via email
 
+//Show Balance
+const balance = document.querySelectorAll(".balance-info__block");
+const balanceCard = balance.forEach((b) => {
+  console.log(b.closest(".user-card").id);
+});
+
+const showBalance = function (transactions) {
+  return transactions.reduce((total, cur) => {
+    if (cur.type === "withdrawal") {
+      return (total -= Number(cur.amount));
+    }
+
+    return (total += Number(cur.amount));
+  }, 0);
+};
+
 //Reveal cards
 const cardsZone = document.querySelector(".user-cards__zone");
 const revealCards = function (curUser) {
   curUser.cards.forEach((card) => {
+    const curId = card.id;
+    const curCardTrans = card.transactions.filter((t) => t.cardID === curId);
     const cardHtml = `
     <div class="total-card__info">
       <div class="user-card" id=${card.id}>
@@ -109,10 +132,11 @@ const revealCards = function (curUser) {
         </div>
         <div class="balance-info__block">
           <h3>Balance</h3>
-          <p class="balance"></p>
+          <p class="balance">${showBalance(curCardTrans)}</p>
         </div>
       </div>
     </div>`;
+
     cardsZone.insertAdjacentHTML("afterbegin", cardHtml);
   });
 };
@@ -126,60 +150,12 @@ const sortTransactions = function (curCard) {
 };
 
 //Reveal card transactions block
-// const revealTransactions = function (transactions, curTarget) {
-//   const cardTransactionsContainer = curTarget.closest(".total-card__info");
-//   const transastions = `<div class="transactions"></div>`;
-//   cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
-//   transactions.forEach((t) => {
-//     const htmlString = `<div class="transaction ${t.type}">
-//             <span class="transaction-group">
-//               <img class="oper-group__img" src="./${t.group}.png" />
-//             </span>
-//             <div class="transaction-name--date__block">
-//               <span class="transaction--name">AMAZON</span>
-//               <span class="transaction--date">Today</span>
-//             </div>
-//             <div class="transaction-amount">
-//               <span class="transaction-currency">${t.currency}</span>
-//               <span class="transaction--amount">${t.amount}</span>
-//             </div>
-//           </div>`;
-//     cardTransactionsContainer.insertAdjacentHTML("beforeend", htmlString);
-//   });
-// };
-
-//Reveal card transactions block
-// const revealTransactions = function (transactions, curTarget) {
-//   const cardTransactionsContainer = curTarget.closest(".total-card__info");
-//   const cardTransactionsBlock =
-//     cardTransactionsContainer.querySelector(".transactions");
-//   transactions.forEach((t) => {
-//     const htmlString = `<div class="transaction ${t.type}">
-//             <span class="transaction-group">
-//               <img class="oper-group__img" src="./${t.group}.png" />
-//             </span>
-//             <div class="transaction-name--date__block">
-//               <span class="transaction--name">AMAZON</span>
-//               <span class="transaction--date">Today</span>
-//             </div>
-//             <div class="transaction-amount">
-//               <span class="transaction-currency">${t.currency}</span>
-//               <span class="transaction--amount">${t.amount}</span>
-//             </div>
-//           </div>`;
-//     const transactionsBlock = `<div class="transactions"></div>`;
-//     cardTransactionsContainer.insertAdjacentHTML(
-//       "beforeend",
-//       transactionsBlock
-//     );
-//     transactionsBlock.insertAdjacentHTML("aftebegin", htmlString);
-//   });
-// };
 const revealTransactions = function (transactions, curTarget) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
+  const transastions = `<div class="transactions"></div>`;
+  cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
   const cardTransactionsBlock =
     cardTransactionsContainer.querySelector(".transactions");
-  console.log(cardTransactionsContainer, cardTransactionsBlock);
   transactions.forEach((t) => {
     const htmlString = `<div class="transaction ${t.type}">
             <span class="transaction-group">
@@ -222,13 +198,6 @@ const openTransactions = document.addEventListener("click", function (e) {
   }
 });
 //Add transaction info function
-
-//Show Balance
-const balance = document.querySelector(".balance");
-const showBalance = function () {
-  curUser.transactions.forEach((card) => console.log(transactions));
-};
-showBalance();
 
 //Time-out function
 const timer = document.querySelector(".timer");

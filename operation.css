@@ -100,3 +100,19 @@
   width: 8rem;
   align-self: flex-start;
 }
+
+/* timer */
+.log-out--timer h5 {
+  color: white;
+  font-weight: 200;
+}
+.timer {
+  color: white;
+  font-weight: 800;
+}
+.box-style {
+  background-color: rgb(13, 14, 15);
+  border-radius: 15px;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}

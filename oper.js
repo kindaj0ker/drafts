@@ -107,6 +107,10 @@ const revealCards = function (curUser) {
           <p class="expiry-date">expired by ${card.expired}</p>
           <p class="transactions-init">Show transactions↓</p>
         </div>
+        <div class="balance-info__block">
+          <h3>Balance</h3>
+          <p class="balance"></p>
+        </div>
       </div>
     </div>`;
     cardsZone.insertAdjacentHTML("afterbegin", cardHtml);
@@ -122,10 +126,60 @@ const sortTransactions = function (curCard) {
 };
 
 //Reveal card transactions block
+// const revealTransactions = function (transactions, curTarget) {
+//   const cardTransactionsContainer = curTarget.closest(".total-card__info");
+//   const transastions = `<div class="transactions"></div>`;
+//   cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
+//   transactions.forEach((t) => {
+//     const htmlString = `<div class="transaction ${t.type}">
+//             <span class="transaction-group">
+//               <img class="oper-group__img" src="./${t.group}.png" />
+//             </span>
+//             <div class="transaction-name--date__block">
+//               <span class="transaction--name">AMAZON</span>
+//               <span class="transaction--date">Today</span>
+//             </div>
+//             <div class="transaction-amount">
+//               <span class="transaction-currency">${t.currency}</span>
+//               <span class="transaction--amount">${t.amount}</span>
+//             </div>
+//           </div>`;
+//     cardTransactionsContainer.insertAdjacentHTML("beforeend", htmlString);
+//   });
+// };
+
+//Reveal card transactions block
+// const revealTransactions = function (transactions, curTarget) {
+//   const cardTransactionsContainer = curTarget.closest(".total-card__info");
+//   const cardTransactionsBlock =
+//     cardTransactionsContainer.querySelector(".transactions");
+//   transactions.forEach((t) => {
+//     const htmlString = `<div class="transaction ${t.type}">
+//             <span class="transaction-group">
+//               <img class="oper-group__img" src="./${t.group}.png" />
+//             </span>
+//             <div class="transaction-name--date__block">
+//               <span class="transaction--name">AMAZON</span>
+//               <span class="transaction--date">Today</span>
+//             </div>
+//             <div class="transaction-amount">
+//               <span class="transaction-currency">${t.currency}</span>
+//               <span class="transaction--amount">${t.amount}</span>
+//             </div>
+//           </div>`;
+//     const transactionsBlock = `<div class="transactions"></div>`;
+//     cardTransactionsContainer.insertAdjacentHTML(
+//       "beforeend",
+//       transactionsBlock
+//     );
+//     transactionsBlock.insertAdjacentHTML("aftebegin", htmlString);
+//   });
+// };
 const revealTransactions = function (transactions, curTarget) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
-  const transastions = `<div class="transactions"></div>`;
-  cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
+  const cardTransactionsBlock =
+    cardTransactionsContainer.querySelector(".transactions");
+  console.log(cardTransactionsContainer, cardTransactionsBlock);
   transactions.forEach((t) => {
     const htmlString = `<div class="transaction ${t.type}">
             <span class="transaction-group">
@@ -140,10 +194,9 @@ const revealTransactions = function (transactions, curTarget) {
               <span class="transaction--amount">${t.amount}</span>
             </div>
           </div>`;
-    cardTransactionsContainer.insertAdjacentHTML("beforeend", htmlString);
+    cardTransactionsBlock.insertAdjacentHTML("beforeend", htmlString);
   });
 };
-
 //Show/close transactions block
 const openTransactions = document.addEventListener("click", function (e) {
   const curTarget = e.target;
@@ -162,9 +215,38 @@ const openTransactions = document.addEventListener("click", function (e) {
     } else {
       closeTransactions.textContent = "Show transactions↓";
       const transactionsBlock = curTarget.closest(".total-card__info");
-      const transactions = curTarget.closest(".transactions");
+      const transactions = transactionsBlock.querySelector(".transactions");
 
       transactionsBlock.removeChild(transactions);
     }
   }
 });
+//Add transaction info function
+
+//Show Balance
+const balance = document.querySelector(".balance");
+const showBalance = function () {
+  curUser.transactions.forEach((card) => console.log(transactions));
+};
+showBalance();
+
+//Time-out function
+const timer = document.querySelector(".timer");
+let time = 60;
+const countDownTimerFunc = setInterval(
+  function () {
+    const min = toString(Math.trunc(`${time / 60}`));
+    const sec = toString(`${time % 60}`);
+    timer.textContent = `${min}:${sec}`;
+    time--;
+  },
+  1000,
+  time
+);
+
+// const logOutTimer = setTimeout(function () {
+//   if (min === "0" && sec === "0") {
+//     console.log(lpggedout);
+//   }
+// }, time);
+// window.addEventListener("click", countDownTimerFunc);

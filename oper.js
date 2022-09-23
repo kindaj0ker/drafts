@@ -57,10 +57,6 @@ const userPeter = new User(
 );
 userPeter.createNewCard("VIP", "1", "", "$");
 userPeter.createNewCard("PLUS", "2", "", "$");
-userPeter.createNewCard("VIP", "3", "", "$");
-userPeter.createNewTransaction("loan", "500", "$", "deposit", "3");
-userPeter.createNewTransaction("other", "100", "$", "withdrawal", "3");
-userPeter.createNewTransaction("other", "50", "$", "withdrawal", "3");
 
 userPeter.createNewTransaction("other", "130", "$", "deposit", "1");
 userPeter.createNewTransaction("loan", "500", "$", "deposit", "1");
@@ -150,16 +146,16 @@ const sortTransactions = function (curCard) {
 const revealTransactions = function (transactions, curTarget) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
   const transastions = `<div class="sorting-box">
-      <div class="radio">
-        <input type="radio" id="all" name="trans" value="all" checked/>
+      <div>
+        <input class="radio" type="radio" id="all" name="trans" value="all" checked/>
         <label for="trans">All transactions</label>
       </div>
-      <div class="radio">
-        <input type="radio" id="withdrawal" name="trans" value="withdrawals" />
+      <div>
+        <input class="radio" type="radio" id="withdrawal" name="trans" value="withdrawals" />
         <label for="trans">Withdrawals</label>
       </div>
-      <div class="radio">
-        <input type="radio" id="deposit" name="trans" value="deposits"/>
+      <div>
+        <input class="radio" type="radio" id="deposit" name="trans" value="deposits"/>
         <label for="trans">Deposits</label>
       </div>
     </div>
@@ -202,14 +198,20 @@ const openTransactions = document.addEventListener("click", function (e) {
       //Add transactions info
       const curCardID = curCard.id;
       sortTransactions(curCardID);
-      sorting();
       revealTransactions(curUser.transactions, curTarget);
+      const radioBtns = document.getElementsByName("trans");
+      radioBtns.forEach((btn) =>
+        btn.addEventListener("click", sortingTrans(curCard, btn))
+      );
+    } else {
+      //Close block
+      closeTransactions.textContent = "Show transactions↓";
+      const transactionsBlock = curTarget.closest(".total-card__info");
+      const transactions = transactionsBlock.querySelector(".transactions");
+      const radioBtns = transactionsBlock.querySelector(".sorting-box");
+      transactionsBlock.removeChild(transactions);
+      transactionsBlock.removeChild(radioBtns);
     }
-  } else {
-    closeTransactions.textContent = "Show transactions↓";
-    const transactionsBlock = curTarget.closest(".total-card__info");
-    const transactions = transactionsBlock.querySelector(".transactions");
-    transactionsBlock.removeChild(transactions);
   }
 });
 //Add transaction info function
@@ -228,17 +230,19 @@ const countDownTimerFunc = setInterval(
   time
 );
 //Sorting functions
-const radioBtns = document.querySelectorAll(".radio");
-const sorting = function (curCardID) {
-  console.log(sortTransactions(curUser));
+const sortingTrans = function (curCard, btn) {
+  if (btn.checked === true && !(btn.id === "all")) {
+    const type = btn.id;
+    showSortedOperations(curCard, type);
+  }
 };
-// const sorting = function (curCard) {
-//   const transactions = curUser.transactions.filter(function (transaction) {
-//     return transaction.cardID === curCard;
-//   });
-// };
-//Descending/ascending sorting
 
+//Sorting box
+const showSortedOperations = function (curCard, type) {
+  curUser.transactions.filter(function (t) {
+    return t.cardID === curCard && t.type === type;
+  });
+};
 // const logOutTimer = setTimeout(function () {
 //   if (min === "0" && sec === "0") {
 //     console.log(lpggedout);

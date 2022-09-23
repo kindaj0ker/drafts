@@ -24,7 +24,7 @@ class User {
       //   },
     ];
   }
-  createNewCard(cardPlan, ID, expired = "", currency="$") {
+  createNewCard(cardPlan, ID, expired = "", currency = "$") {
     const data = new Map([
       ["id", `${ID}`], // CHANGE BACK ON LIBRARY UNIQID
       ["plan", `${cardPlan}`],
@@ -55,9 +55,9 @@ const userPeter = new User(
   "peterJ@gmail.com",
   "IamPeter00!"
 );
-userPeter.createNewCard("VIP", "1", , "$");
-userPeter.createNewCard("PLUS", "2", , "$");
-userPeter.createNewCard("VIP", "3", , "$");
+userPeter.createNewCard("VIP", "1", "", "$");
+userPeter.createNewCard("PLUS", "2", "", "$");
+userPeter.createNewCard("VIP", "3", "", "$");
 userPeter.createNewTransaction("loan", "500", "$", "deposit", "3");
 userPeter.createNewTransaction("other", "100", "$", "withdrawal", "3");
 userPeter.createNewTransaction("other", "50", "$", "withdrawal", "3");
@@ -141,7 +141,7 @@ revealCards(curUser);
 
 //Sort transactions
 const sortTransactions = function (curCard) {
-  const transactions = userPeter.transactions.filter(function (transaction) {
+  const transactions = curUser.transactions.filter(function (transaction) {
     return transaction.cardID === curCard;
   });
 };
@@ -149,7 +149,23 @@ const sortTransactions = function (curCard) {
 //Reveal card transactions block
 const revealTransactions = function (transactions, curTarget) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
-  const transastions = `<div class="transactions"></div>`;
+  const transastions = `<div class="sorting-box">
+      <div class="radio">
+        <input type="radio" id="all" name="trans" value="all" checked/>
+        <label for="trans">All transactions</label>
+      </div>
+      <div class="radio">
+        <input type="radio" id="withdrawal" name="trans" value="withdrawals" />
+        <label for="trans">Withdrawals</label>
+      </div>
+      <div class="radio">
+        <input type="radio" id="deposit" name="trans" value="deposits"/>
+        <label for="trans">Deposits</label>
+      </div>
+    </div>
+    <div class="transactions">
+    </div>
+                        `;
   cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
   const cardTransactionsBlock =
     cardTransactionsContainer.querySelector(".transactions");
@@ -170,7 +186,8 @@ const revealTransactions = function (transactions, curTarget) {
     cardTransactionsBlock.insertAdjacentHTML("beforeend", htmlString);
   });
 };
-//Show/close transactions block
+
+// Show/close transactions block
 const openTransactions = document.addEventListener("click", function (e) {
   const curTarget = e.target;
   const curCard = curTarget.closest(".user-card");
@@ -181,17 +198,18 @@ const openTransactions = document.addEventListener("click", function (e) {
     if (curCard.classList.contains("open")) {
       //Change text to close transactions
       closeTransactions.textContent = "Close transactions information ↑";
+
       //Add transactions info
       const curCardID = curCard.id;
       sortTransactions(curCardID);
+      sorting();
       revealTransactions(curUser.transactions, curTarget);
-    } else {
-      closeTransactions.textContent = "Show transactions↓";
-      const transactionsBlock = curTarget.closest(".total-card__info");
-      const transactions = transactionsBlock.querySelector(".transactions");
-
-      transactionsBlock.removeChild(transactions);
     }
+  } else {
+    closeTransactions.textContent = "Show transactions↓";
+    const transactionsBlock = curTarget.closest(".total-card__info");
+    const transactions = transactionsBlock.querySelector(".transactions");
+    transactionsBlock.removeChild(transactions);
   }
 });
 //Add transaction info function
@@ -209,6 +227,17 @@ const countDownTimerFunc = setInterval(
   1000,
   time
 );
+//Sorting functions
+const radioBtns = document.querySelectorAll(".radio");
+const sorting = function (curCardID) {
+  console.log(sortTransactions(curUser));
+};
+// const sorting = function (curCard) {
+//   const transactions = curUser.transactions.filter(function (transaction) {
+//     return transaction.cardID === curCard;
+//   });
+// };
+//Descending/ascending sorting
 
 // const logOutTimer = setTimeout(function () {
 //   if (min === "0" && sec === "0") {

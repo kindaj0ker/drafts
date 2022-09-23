@@ -160,8 +160,8 @@ const revealTransactions = function (transactions, curTarget) {
       </div>
     </div>
     <div class="transactions">
-    </div>
-                        `;
+    </div>`;
+
   cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
   const cardTransactionsBlock =
     cardTransactionsContainer.querySelector(".transactions");
@@ -206,15 +206,19 @@ const openTransactions = document.addEventListener("click", function (e) {
     } else {
       //Close block
       closeTransactions.textContent = "Show transactions↓";
-      const transactionsBlock = curTarget.closest(".total-card__info");
-      const transactions = transactionsBlock.querySelector(".transactions");
-      const radioBtns = transactionsBlock.querySelector(".sorting-box");
-      transactionsBlock.removeChild(transactions);
-      transactionsBlock.removeChild(radioBtns);
+      deletePrevInfo(curTarget);
     }
   }
 });
-//Add transaction info function
+
+//Delete prev transactions info
+const deletePrevInfo = function (curTarget) {
+  const transactionsBlock = curTarget.closest(".total-card__info");
+  const transactions = transactionsBlock.querySelector(".transactions");
+  const radioBtns = transactionsBlock.querySelector(".sorting-box");
+  transactionsBlock.removeChild(transactions);
+  transactionsBlock.removeChild(radioBtns);
+};
 
 //Time-out function
 const timer = document.querySelector(".timer");
@@ -233,15 +237,18 @@ const countDownTimerFunc = setInterval(
 const sortingTrans = function (curCard, btn) {
   if (btn.checked === true && !(btn.id === "all")) {
     const type = btn.id;
+    deletePrevInfo(curTarget);
     showSortedOperations(curCard, type);
   }
 };
 
-//Sorting box
+//Show sorted operations
 const showSortedOperations = function (curCard, type) {
-  curUser.transactions.filter(function (t) {
-    return t.cardID === curCard && t.type === type;
+  const transactions = curUser.transactions.filter(function (t) {
+    t.cardID === curCard && t.type === type;
   });
+  console.log(transactions);
+  revealTransactions(transactions, curTarget);
 };
 // const logOutTimer = setTimeout(function () {
 //   if (min === "0" && sec === "0") {

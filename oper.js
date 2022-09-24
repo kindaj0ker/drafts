@@ -201,7 +201,9 @@ const openTransactions = document.addEventListener("click", function (e) {
       revealTransactions(curUser.transactions, curTarget);
       const radioBtns = document.getElementsByName("trans");
       radioBtns.forEach((btn) =>
-        btn.addEventListener("click", sortingTrans(curCard, btn))
+        btn.addEventListener("change", function () {
+          sortingTrans(curTarget, curCard, btn);
+        })
       );
     } else {
       //Close block
@@ -215,9 +217,27 @@ const openTransactions = document.addEventListener("click", function (e) {
 const deletePrevInfo = function (curTarget) {
   const transactionsBlock = curTarget.closest(".total-card__info");
   const transactions = transactionsBlock.querySelector(".transactions");
+  console.log(transactions);
   const radioBtns = transactionsBlock.querySelector(".sorting-box");
   transactionsBlock.removeChild(transactions);
   transactionsBlock.removeChild(radioBtns);
+};
+
+//Sorting functions
+const sortingTrans = function (curTarget, curCard, btn) {
+  if (btn.checked === true && !(btn.id === "all")) {
+    const type = btn.id;
+    deletePrevInfo.bind(curTarget);
+    showSortedOperations.bind(this, curTarget, curCard, type);
+  }
+};
+
+//Show sorted operations
+const showSortedOperations = function (curTarget, curCard, type) {
+  const transactions = curUser.transactions.filter(function (t) {
+    t.cardID === curCard && t.type === type;
+  });
+  revealTransactions.bind(this, transactions, curTarget);
 };
 
 //Time-out function
@@ -233,23 +253,6 @@ const countDownTimerFunc = setInterval(
   1000,
   time
 );
-//Sorting functions
-const sortingTrans = function (curCard, btn) {
-  if (btn.checked === true && !(btn.id === "all")) {
-    const type = btn.id;
-    deletePrevInfo(curTarget);
-    showSortedOperations(curCard, type);
-  }
-};
-
-//Show sorted operations
-const showSortedOperations = function (curCard, type) {
-  const transactions = curUser.transactions.filter(function (t) {
-    t.cardID === curCard && t.type === type;
-  });
-  console.log(transactions);
-  revealTransactions(transactions, curTarget);
-};
 // const logOutTimer = setTimeout(function () {
 //   if (min === "0" && sec === "0") {
 //     console.log(lpggedout);

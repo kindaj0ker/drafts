@@ -83,12 +83,66 @@
           </div>
         </div>
       </div> -->
-    </div>
+      <div class="create-card__box">
+      <h5 class="create-p creation">Get a new card <span class="creat-card__btn">+</span></h5>
+      <form class="register-form hidden">
+        <div class="form-field full-width--fields">
+          <label for="plan">Choose your plan</label><br />
+          <select class="plan" name="plan" size="1" required>
+            <option class="card-option" value="Standart">Standart FREE</option>
+            <option class="card-option" selected value="Plus">Plus $5.99/month</option>
+            <option class="card-option" value="Premium">Premium $9.99/month</option>
+            <option class="card-option" value="VIP">VIP $19.99/month</option>
+          </select>
+        </div>    
+        <button class="create-acc--btn" />Get a Card</button>
+      </form>
+      </div>
+        
     <div class="log-out--timer box-style">
       <h5>
         You'll be logged out in
         <span class="timer"></span>
       </h5>
     </div>
+
+  <div class="savings-block">
+    <div class="categories-block">
+      <div class="category">
+        <img class="saving-category__img" src="./travel-saving.png"/>
+        <p class="saving-category__name">Travel</p>
+      </div>
+      <div class="category">
+        <img class="saving-category__img" src="./education-saving.png"/>
+        <p class="saving-category__name">Education</p>
+      </div>
+      <div class="category">
+        <img class="saving-category__img" src="./health-saving.svg"/>
+        <p class="saving-category__name">Health</p>
+      </div>
+      <div class="category">
+        <img class="saving-category__img" src="./real-estate-saving.svg"/>
+        <p class="saving-category__name">Real Estate</p>
+      </div>
+      <div class="category">
+        <img class="saving-category__img" src="./other-saving.png"/>
+        <p class="saving-category__name">Other</p>
+      </div>
+      
+    </div>
+    <div class="transactions">
+      <div class="transaction">
+        <img class="oper-group__img" src="./education-saving.png"/>
+        <div class="transaction-name--date__block">
+              <span class="transaction--name">Travel</span>
+              <span class="transaction--date">Today</span>
+            </div>
+            <div class="transaction-amount">
+              <span class="transaction-currency">$</span>
+              <span class="transaction--amount">100</span>
+            </div>
+      </div>
+    </div>
+  </div>
   </body>
 </html>

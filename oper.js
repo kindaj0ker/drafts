@@ -35,13 +35,14 @@ class User {
     const card = Object.fromEntries(data);
     this.cards.push(card);
   }
-  createNewTransaction(group, amount, currency, type, cardId) {
+  createNewTransaction(group, amount, currency, type, cardId, savingType = "") {
     const data = new Map([
       ["group", `${group}`], // other data needs to be added
       ["amount", `${amount}`],
       ["currency", `${currency}`],
       ["type", `${type}`],
       ["cardID", `${cardId}`],
+      ["savingType", `${savingType}`],
     ]);
     const transaction = Object.fromEntries(data);
     this.transactions.push(transaction);
@@ -57,39 +58,89 @@ const userPeter = new User(
 );
 userPeter.createNewCard("VIP", "1", "", "$");
 userPeter.createNewCard("PLUS", "2", "", "$");
+userPeter.createNewCard("PLUS", "3", "", "$");
 
 userPeter.createNewTransaction("other", "130", "$", "deposit", "1");
 userPeter.createNewTransaction("loan", "500", "$", "deposit", "1");
 userPeter.createNewTransaction("other", "100", "$", "withdrawal", "1");
 userPeter.createNewTransaction("receive", "700", "$", "deposit", "1");
 userPeter.createNewTransaction("loan", "100", "$", "deposit", "1");
-userPeter.createNewTransaction("savings", "100", "$", "withdrawal", "1");
+userPeter.createNewTransaction(
+  "savings",
+  "100",
+  "$",
+  "withdrawal",
+  "1",
+  "travel"
+);
 userPeter.createNewTransaction("grocery", "60", "$", "withdrawal", "1");
 userPeter.createNewTransaction("other", "140", "$", "withdrawal", "1");
 userPeter.createNewTransaction("utilities", "50", "$", "withdrawal", "1");
 userPeter.createNewTransaction("grocery", "310", "$", "withdrawal", "1");
 userPeter.createNewTransaction("other", "10", "$", "deposit", "1");
-userPeter.createNewTransaction("other", "13", "$", "deposit", "1");
+userPeter.createNewTransaction(
+  "saving",
+  "13",
+  "$",
+  "withdrawal",
+  "1",
+  "health"
+);
 userPeter.createNewTransaction("grocery", "28", "$", "withdrawal", "1");
 userPeter.createNewTransaction("grocery", "108", "$", "withdrawal", "1");
 userPeter.createNewTransaction("clothes", "450", "$", "withdrawal", "1");
-userPeter.createNewTransaction("savings", "10", "$", "withdrawal", "1");
-userPeter.createNewTransaction("savings", "15", "$", "withdrawal", "1");
+userPeter.createNewTransaction(
+  "savings",
+  "10",
+  "$",
+  "withdrawal",
+  "1",
+  "health"
+);
+userPeter.createNewTransaction(
+  "savings",
+  "15",
+  "$",
+  "withdrawal",
+  "1",
+  "other"
+);
 userPeter.createNewTransaction("receive", "100", "$", "deposit", "2");
 userPeter.createNewTransaction("receive", "20000", "$", "deposit", "2");
 userPeter.createNewTransaction("utilities", "100", "$", "withdrawal", "2");
 userPeter.createNewTransaction("grocery", "35", "$", "withdrawal", "2");
 userPeter.createNewTransaction("grocery", "80", "$", "withdrawal", "2");
 userPeter.createNewTransaction("clothes", "120", "$", "withdrawal", "2");
-userPeter.createNewTransaction("savings", "50", "$", "withdrawal", "2");
-userPeter.createNewTransaction("savings", "140", "$", "withdrawal", "2");
+userPeter.createNewTransaction(
+  "savings",
+  "50",
+  "$",
+  "withdrawal",
+  "2",
+  "health"
+);
+userPeter.createNewTransaction(
+  "savings",
+  "140",
+  "$",
+  "withdrawal",
+  "2",
+  "realEstate"
+);
 userPeter.createNewTransaction("other", "36", "$", "withdrawal", "2");
 userPeter.createNewTransaction("send", "60", "$", "withdrawal", "2");
 userPeter.createNewTransaction("grocery", "29", "$", "withdrawal", "2");
 userPeter.createNewTransaction("grocery", "41", "$", "withdrawal", "2");
 userPeter.createNewTransaction("clothes", "35", "$", "deposit", "2");
 userPeter.createNewTransaction("send", "10", "$", "withdrawal", "2");
-userPeter.createNewTransaction("savings", "15", "$", "withdrawal", "2");
+userPeter.createNewTransaction(
+  "savings",
+  "150",
+  "$",
+  "withdrawal",
+  "2",
+  "travel"
+);
 
 const curUser = userPeter; // get curuser from local storage via email
 
@@ -137,15 +188,21 @@ revealCards(curUser);
 
 //Sort transactions
 const sortTransactions = function (curCard) {
-  const transactions = curUser.transactions.filter(function (transaction) {
+  return curUser.transactions.filter(function (transaction) {
     return transaction.cardID === curCard;
   });
 };
 
 //Reveal card transactions block
-const revealTransactions = function (transactions, curTarget) {
+const revealTransactions = function (transactions, curTarget, curCard) {
   const cardTransactionsContainer = curTarget.closest(".total-card__info");
-  const transastions = `<div class="sorting-box">
+  if (sortTransactions(curCard.id).length === 0) {
+    const noTransBlock = `<div class="no-transactions__block">
+        <p class="no-transactions__p"> No transactions found</p>
+      </div>`;
+    cardTransactionsContainer.insertAdjacentHTML("beforeend", noTransBlock);
+  } else {
+    const transastions = `<div class="sorting-box">
       <div>
         <input class="radio" type="radio" id="all" name="trans" value="all" checked/>
         <label for="trans">All transactions</label>
@@ -162,11 +219,11 @@ const revealTransactions = function (transactions, curTarget) {
     <div class="transactions">
     </div>`;
 
-  cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
-  const cardTransactionsBlock =
-    cardTransactionsContainer.querySelector(".transactions");
-  transactions.forEach((t) => {
-    const htmlString = `<div class="transaction ${t.type}">
+    cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
+    const cardTransactionsBlock =
+      cardTransactionsContainer.querySelector(".transactions");
+    transactions.forEach((t) => {
+      const htmlString = `<div class="transaction ${t.type}">
             <span class="transaction-group">
               <img class="oper-group__img" src="./${t.group}.png" />
             </span>
@@ -179,8 +236,9 @@ const revealTransactions = function (transactions, curTarget) {
               <span class="transaction--amount">${t.amount}</span>
             </div>
           </div>`;
-    cardTransactionsBlock.insertAdjacentHTML("beforeend", htmlString);
-  });
+      cardTransactionsBlock.insertAdjacentHTML("beforeend", htmlString);
+    });
+  }
 };
 
 // Show/close transactions block
@@ -198,7 +256,7 @@ const openTransactions = document.addEventListener("click", function (e) {
       //Add transactions info
       const curCardID = curCard.id;
       sortTransactions(curCardID);
-      revealTransactions(curUser.transactions, curTarget);
+      revealTransactions(curUser.transactions, curTarget, curCard);
       const radioBtns = document.getElementsByName("trans");
       radioBtns.forEach((btn) =>
         btn.addEventListener("change", function () {
@@ -208,38 +266,75 @@ const openTransactions = document.addEventListener("click", function (e) {
     } else {
       //Close block
       closeTransactions.textContent = "Show transactions↓";
-      deletePrevInfo(curTarget);
+      deletePrevInfo(curTarget, curCard);
     }
   }
 });
 
 //Delete prev transactions info
-const deletePrevInfo = function (curTarget) {
+const deletePrevInfo = function (curTarget, curCard) {
   const transactionsBlock = curTarget.closest(".total-card__info");
   const transactions = transactionsBlock.querySelector(".transactions");
-  console.log(transactions);
-  const radioBtns = transactionsBlock.querySelector(".sorting-box");
-  transactionsBlock.removeChild(transactions);
-  transactionsBlock.removeChild(radioBtns);
+  if (sortTransactions(curCard.id).length === 0) {
+    const noTransactions = document.querySelector(".no-transactions__block");
+    transactionsBlock.removeChild(noTransactions);
+  } else {
+    const radioBtns = transactionsBlock.querySelector(".sorting-box");
+    transactionsBlock.removeChild(transactions);
+    transactionsBlock.removeChild(radioBtns);
+  }
 };
 
 //Sorting functions
 const sortingTrans = function (curTarget, curCard, btn) {
   if (btn.checked === true && !(btn.id === "all")) {
     const type = btn.id;
-    deletePrevInfo.bind(curTarget);
-    showSortedOperations.bind(this, curTarget, curCard, type);
+    deletePrevInfo(curTarget);
+    showSortedOperations(curTarget, curCard, type);
   }
 };
 
 //Show sorted operations
 const showSortedOperations = function (curTarget, curCard, type) {
   const transactions = curUser.transactions.filter(function (t) {
-    t.cardID === curCard && t.type === type;
+    return t.cardID === curCard.id && t.type === type;
   });
-  revealTransactions.bind(this, transactions, curTarget);
+  revealTransactions(transactions, curTarget);
 };
 
+//Create new card
+const getNewCardBtn = document.querySelector(".creation");
+getNewCardBtn.addEventListener("click", function () {
+  const creationBlock = document.querySelector(".creation");
+  creationBlock.classList.add("hidden");
+  const choosePlan = document.querySelector(".register-form");
+  choosePlan.classList.remove("hidden");
+});
+const getCardBtn = document.querySelector(".register-form");
+getCardBtn.addEventListener("sumbit", function (e) {
+  e.preventDefault();
+  const plan = document.querySelector(".plan").value;
+  curUser.cards.push(plan);
+  revealCards(curUser);
+});
+
+// Sort savings
+const sortSavings = function () {
+  return curUser.transactions.filter(function (transaction) {
+    return transaction.group === "saving";
+  });
+};
+//Show savings
+const savingsBlock = document.querySelector(".savings-block");
+const showSavings = function () {
+  const savingsTypes = new Set();
+  sortSavings().forEach((saving) => {
+    const type = saving.savingType;
+    savingsTypes.add(type);
+  });
+  console.log(savingsTypes);
+};
+showSavings();
 //Time-out function
 const timer = document.querySelector(".timer");
 let time = 60;

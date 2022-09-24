@@ -52,6 +52,10 @@
   flex-flow: right;
 }
 /* CARDS ZONE */
+.no-transactions__block {
+  background-color: var(--blue-color);
+  border: 0.1rem solid black;
+}
 .user-cards__zone {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -107,7 +111,108 @@
   float: right;
   justify-content: space-evenly;
 }
+/* Create new card */
+.create-card__box {
+  padding: 0.2rem;
+  display: flex;
+  direction: row;
+  width: fit-content;
+}
+.creat-card__btn {
+  margin: auto 0.5rem;
+  padding: 0.3rem;
+  border-radius: 100px;
+  background-color: var(--blue-color);
+  border: 0.2rem solid black;
+}
+.create-p {
+  margin: auto 0.5rem;
+}
+.register-form {
+  width: 100%;
+  display: grid;
+}
+select {
+  background-color: orange;
+  outline: none;
+  width: 100%;
+  margin: 0.5rem 0 0 0;
+  padding: 0.3rem;
+  border-radius: 10px;
+}
+.card-option {
+  color: black;
+  outline: none;
+}
 
+.form-field {
+  font-family: var(--text-font);
+  background-color: rgb(38, 42, 52);
+  border-radius: 15px;
+  margin: 0.3rem 0rem;
+  padding: 0.3rem 0rem;
+}
+
+.form-field label {
+  color: rgb(127, 137, 154);
+  font-size: 1rem;
+  margin: 0rem 0.5rem;
+  padding: 0;
+}
+.form-field img {
+  background-color: whitesmoke;
+  border-radius: 10px;
+  padding: 0.2rem;
+  margin: 0.2rem;
+  width: 1.5rem;
+}
+.create-acc--btn {
+  align-self: center;
+  background-color: orange;
+  color: white;
+  border-radius: 15px;
+  margin: 1rem 0rem;
+  padding: 0.5rem;
+  display: block;
+  box-shadow: 0.3rem 0.3rem 0.4rem gray;
+  font-family: var(--element-font);
+  font-size: 1.5rem;
+}
+.create-acc--btn:hover {
+  background: orange;
+  color: white;
+}
+
+/* Savings */
+.savings-block {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem auto;
+  width: 100%;
+}
+.categories-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: grey;
+  border-radius: 15px;
+  align-items: center;
+}
+.category {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 0;
+}
+.saving-category__img {
+  width: 5rem;
+  background-color: aliceblue;
+  border: 0.2rem solid black;
+  border-radius: 10px;
+}
+.saving-category__name {
+  font-family: var(--element-font);
+  margin: 0.2rem auto;
+}
 /* timer */
 .log-out--timer h5 {
   color: white;

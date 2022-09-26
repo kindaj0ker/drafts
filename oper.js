@@ -162,6 +162,21 @@ const revealCards = function (curUser) {
     const curId = card.id;
     const curCardTrans = curUser.transactions.filter((t) => t.cardID === curId);
     const balance = showBalance(curCardTrans);
+    const transactionFilters = `<div class="sorting-box">
+      <div>
+        <input class="radio" type="radio" id="all" name="trans" value="all" checked/>
+        <label for="trans">All transactions</label>
+      </div>
+      <div>
+        <input class="radio" type="radio" id="withdrawal" name="trans" value="withdrawals" />
+        <label for="trans">Withdrawals</label>
+      </div>
+      <div>
+        <input class="radio" type="radio" id="deposit" name="trans" value="deposits"/>
+        <label for="trans">Deposits</label>
+      </div>
+    </div>`;
+
     const cardHtml = `
     <div class="total-card__info">
       <div class="user-card" id=${card.id}>
@@ -179,9 +194,21 @@ const revealCards = function (curUser) {
           <p class="balance">${balance + " " + card.currency}</p>
         </div>
       </div>
+      ${curCardTrans.length ? transactionFilters : ``}
     </div>`;
-
     cardsZone.insertAdjacentHTML("afterbegin", cardHtml);
+    cardsZone.querySelector(".sorting-box").style.display = "none";
+
+    if (curCardTrans.length) {
+      const curCard = cardsZone.querySelector(".user-card");
+      const radioBtns = cardsZone.querySelector(".sorting-box").querySelectorAll("input[name='trans']");
+
+      radioBtns.forEach((btn) =>
+        btn.addEventListener("change", function (event) {
+          sortingTrans(event.target, curCard, btn);
+        })
+      );
+    }
   });
 };
 revealCards(curUser);
@@ -202,24 +229,10 @@ const revealTransactions = function (transactions, curTarget, curCard) {
       </div>`;
     cardTransactionsContainer.insertAdjacentHTML("beforeend", noTransBlock);
   } else {
-    const transastions = `<div class="sorting-box">
-      <div>
-        <input class="radio" type="radio" id="all" name="trans" value="all" checked/>
-        <label for="trans">All transactions</label>
-      </div>
-      <div>
-        <input class="radio" type="radio" id="withdrawal" name="trans" value="withdrawals" />
-        <label for="trans">Withdrawals</label>
-      </div>
-      <div>
-        <input class="radio" type="radio" id="deposit" name="trans" value="deposits"/>
-        <label for="trans">Deposits</label>
-      </div>
-    </div>
-    <div class="transactions">
-    </div>`;
-
+    const transastions = `<div class="transactions"></div>`;
+    cardTransactionsContainer.querySelector(".sorting-box").style.display = "";
     cardTransactionsContainer.insertAdjacentHTML("beforeEnd", transastions);
+
     const cardTransactionsBlock =
       cardTransactionsContainer.querySelector(".transactions");
     transactions.forEach((t) => {
@@ -257,12 +270,6 @@ const openTransactions = document.addEventListener("click", function (e) {
       const curCardID = curCard.id;
       sortTransactions(curCardID);
       revealTransactions(curUser.transactions, curTarget, curCard);
-      const radioBtns = document.getElementsByName("trans");
-      radioBtns.forEach((btn) =>
-        btn.addEventListener("change", function () {
-          sortingTrans(curTarget, curCard, btn);
-        })
-      );
     } else {
       //Close block
       closeTransactions.textContent = "Show transactions↓";
@@ -281,7 +288,7 @@ const deletePrevInfo = function (curTarget, curCard) {
   } else {
     const radioBtns = transactionsBlock.querySelector(".sorting-box");
     transactionsBlock.removeChild(transactions);
-    transactionsBlock.removeChild(radioBtns);
+    radioBtns.style.display = "none";
   }
 };
 
@@ -289,7 +296,7 @@ const deletePrevInfo = function (curTarget, curCard) {
 const sortingTrans = function (curTarget, curCard, btn) {
   if (btn.checked === true && !(btn.id === "all")) {
     const type = btn.id;
-    deletePrevInfo(curTarget);
+    deletePrevInfo(curTarget, curCard);
     showSortedOperations(curTarget, curCard, type);
   }
 };
@@ -299,7 +306,7 @@ const showSortedOperations = function (curTarget, curCard, type) {
   const transactions = curUser.transactions.filter(function (t) {
     return t.cardID === curCard.id && t.type === type;
   });
-  revealTransactions(transactions, curTarget);
+  revealTransactions(transactions, curTarget, curCard);
 };
 
 //Create new card
